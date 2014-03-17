@@ -1,0 +1,150 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Functional.Union
+{
+    /// <summary>
+    /// A self referential class union of three types
+    /// </summary>
+    /// <typeparam name="RUImpl">The implementing RefUnion</typeparam>
+    /// <typeparam name="T1">The first type</typeparam>
+    /// <typeparam name="T2">The second type</typeparam>
+    public class RefUnion<RUImpl, T1, T2>
+        where RUImpl : RefUnion<RUImpl, T1, T2>, new()
+    {
+        #region Fields
+
+        /// <summary>
+        /// The underlying union
+        /// </summary>
+        protected Union<T1, T2> union;
+        #endregion
+
+        #region Instantiators
+
+        /// <summary>
+        /// Creates the implementing RefUnion type from the first type
+        /// </summary>
+        /// <param name="val">The value</param>
+        /// <returns>A new union</returns>
+        public static RUImpl Create(T1 val)
+        {
+            return new RUImpl() { union = val };
+        }
+
+        /// <summary>
+        /// Creates the implementing RefUnion type from the second type
+        /// </summary>
+        /// <param name="val">The value</param>
+        /// <returns>A new union</returns>
+        public static RUImpl Create(T2 val)
+        {
+            return new RUImpl() { union = val };
+        }
+
+        /// <summary>
+        /// Creates the implementing RefUnion type from the underlying union
+        /// </summary>
+        /// <param name="union">The value</param>
+        /// <returns>A new union</returns>
+        public static RUImpl Create(Union<T1, T2> union)
+        {
+            return new RUImpl() { union = union };
+        }
+
+        #endregion
+
+        #region Getters
+
+        /// <summary>
+        /// Gets the value of the first type or the provided value if the union
+        /// is not holding a value of the first type
+        /// </summary>
+        /// <param name="val">The default value</param>
+        /// <returns>The value in the union or the default value</returns>
+        public T1 ValueOr(T1 val)
+        {
+            return this.union.ValueOr(val);
+        }
+
+        /// <summary>
+        /// Gets the value of the first type or the provided value if the union
+        /// is not holding a value of the first type
+        /// </summary>
+        /// <param name="val">The default value</param>
+        /// <returns>The value in the union or the default value</returns>
+        public T1 ValueOr(Func<T1> val)
+        {
+            return this.union.ValueOr(val);
+        }
+
+        /// <summary>
+        /// Gets the value of the second type or the provided value if the
+        /// union is not holding a value of the second type
+        /// </summary>
+        /// <param name="val">The default value</param>
+        /// <returns>The value in the union or the default value</returns>
+        public T2 ValueOr(T2 val)
+        {
+            return this.union.ValueOr(val);
+        }
+
+        /// <summary>
+        /// Gets the value of the second type or the provided value if the
+        /// union is not holding a value of the second type
+        /// </summary>
+        /// <param name="val">The default value</param>
+        /// <returns>The value in the union or the default value</returns>
+        public T2 ValueOr(Func<T2> val)
+        {
+            return this.union.ValueOr(val);
+        }
+        #endregion
+
+        #region Pattern Matching
+        /// <summary>
+        /// Pattern matches on the type the union is holding to perform
+        /// the specified action
+        /// </summary>
+        /// <param name="Match1">The action for the first type</param>
+        /// <param name="Match2">The action for the second type</param>
+        /// <param name="Else">
+        /// The default action if the matching action was not specified
+        /// </param>
+        public virtual void Match(
+            Action<T1> Match1 = null,
+            Action<T2> Match2 = null,
+            Action Else = null)
+        {
+            union.Match(
+                Match1,
+                Match2,
+                Else);
+        }
+
+        /// <summary>
+        /// Pattern matches on the type the union is holding to call
+        /// the specified function
+        /// </summary>
+        /// <param name="Match1">The function for the first type</param>
+        /// <param name="Match2">The function for the second type</param>
+        /// <param name="Else">
+        /// The default function if the matching function was not specified
+        /// </param>
+        /// <typeparam name="TResult">The return type</typeparam>
+        public virtual TResult Match<TResult>(
+            Func<T1, TResult> Match1 = null,
+            Func<T2, TResult> Match2 = null,
+            Func<TResult> Else = null)
+        {
+            return union.Match<TResult>(
+                Match1,
+                Match2,
+                Else);
+        }
+        #endregion
+    }
+}
