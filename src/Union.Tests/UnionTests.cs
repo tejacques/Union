@@ -8,8 +8,23 @@ using Functional.Union;
 
 namespace UnionTests
 {
+    using Tree = Union<Leaf, Node>;
+    public struct Leaf { }
+    public class Node
+    {
+        public int Value;
+        public Tree Left;
+        public Tree Right;
+
+        public Node()
+        {
+            Left = new Leaf();
+            Right = new Leaf();
+        }
+    }
+
     [TestFixture]
-    public class Tests
+    public class UnionTests
     {
         [Test]
         public void TestCreateUnion()
@@ -90,6 +105,41 @@ namespace UnionTests
                 u.Match(
                     Else: () => 0);
             });
+        }
+
+        public static int SumTree(Tree tree)
+        {
+            return tree.Match(
+                (Leaf l) => 0,
+                (Node n) => n.Value + SumTree(n.Left) + SumTree(n.Right));
+        }
+
+        [Test]
+        public void TestTree()
+        {
+            Tree t = new Node
+            {
+                Value = 0,
+                Left = new Node
+                {
+                    Value = 1,
+                    Left = new Node
+                    {
+                        Value = 2
+                    },
+                    Right = new Node
+                    {
+                        Value = 3
+                    }
+                },
+                Right = new Node
+                {
+                    Value = 4
+                }
+            };
+
+            var resultSumTree = SumTree(t);
+            Assert.AreEqual(10, resultSumTree);
         }
     }
 }

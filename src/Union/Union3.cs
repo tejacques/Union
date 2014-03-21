@@ -16,19 +16,39 @@ namespace Functional.Union
     public struct Union<T1, T2, T3>
     {
         #region Types
-        internal enum UnionTypes
+
+        /// <summary>
+        /// The tag for which type the union is
+        /// </summary>
+        public enum UnionTypes
         {
+            /// <summary>
+            /// The Union hasn't been assigned a value
+            /// </summary>
+            Unassigned,
+
+            /// <summary>
+            /// The Union is the first type
+            /// </summary>
             Type1,
+
+            /// <summary>
+            /// The Union is the second type
+            /// </summary>
             Type2,
+
+            /// <summary>
+            /// The Union is the third type
+            /// </summary>
             Type3
         }
         #endregion
 
         #region Fields
-        private readonly UnionTypes _tag;
-        internal T1 Item1;
-        internal T2 Item2;
-        internal T3 Item3;
+        internal readonly UnionTypes _tag;
+        internal readonly T1 Item1;
+        internal readonly T2 Item2;
+        internal readonly T3 Item3;
         #endregion
 
         #region Constructors

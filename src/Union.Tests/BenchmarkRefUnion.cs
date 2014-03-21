@@ -5,57 +5,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Union.Tests;
 
-namespace UnionTests
+namespace RefUnionTests
 {
     [TestFixture]
     public class BenchmarkRefUnion
     {
-        public class UnionIntDouble : RefUnion<UnionIntDouble, int, double>
-        {
-            public override void Match(
-                Action<int> Int = null,
-                Action<double> Double = null,
-                Action Else = null)
-            {
-                base.Match(Int, Double, Else);
-            }
-            public override TResult Match<TResult>(
-                Func<int, TResult> Int = null,
-                Func<double, TResult> Double = null,
-                Func<TResult> Else = null)
-            {
-                return base.Match<TResult>(Int, Double, Else);
-            }
-        }
-
         UnionIntDouble union;
-        int loops = 1000000;
 
         [Test]
         public void _Jit()
         {
-            int tmp = loops;
-            loops = 1;
+            int tmp = BenchmarkSettings.Loops;
+            BenchmarkSettings.Loops = 1;
             BenchmarkCreate();
+            BenchmarkValeOr_Present();
+            BenchmarkValeOr_NotPresent();
+            BenchmarkValeOrFn_Present();
+            BenchmarkValeOrFn_NotPresent();
             BenchmarkMatch();
             BenchmarkMatchResult();
-            loops = tmp;
-        }
-
-        [Test]
-        public void BenchmarkLoop()
-        {
-            for(int i = 0; i < loops; i++)
-            {
-                int j = i;
-            }
+            BenchmarkMatchResultNoLambda();
+            BenchmarkMatchResultNoLambdaCached();
+            BenchmarkSettings.Loops = tmp;
         }
 
         [Test]
         public void BenchmarkCreate()
         {
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 union = UnionIntDouble.Create(i);
             }
@@ -66,7 +45,7 @@ namespace UnionTests
         {
             var u = UnionIntDouble.Create(1);
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.ValueOr(2);
             }
@@ -77,7 +56,7 @@ namespace UnionTests
         {
             var u = UnionIntDouble.Create(1);
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.ValueOr(2.0);
             }
@@ -88,7 +67,7 @@ namespace UnionTests
         {
             var u = UnionIntDouble.Create(1);
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.ValueOr(() => 2);
             }
@@ -99,7 +78,7 @@ namespace UnionTests
         {
             var u = UnionIntDouble.Create(1);
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.ValueOr(() => 2.0);
             }
@@ -108,9 +87,21 @@ namespace UnionTests
         [Test]
         public void BenchmarkMatch()
         {
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                var u = UnionIntDouble.Create(1);
+                u.Match(
+                    Int: x => { },
+                    Else: () => { });
+            }
+        }
+
+        [Test]
+        public void BenchmarkMatchCached()
+        {
             var u = UnionIntDouble.Create(1);
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 u.Match(
                     Int: x => { },
@@ -121,13 +112,46 @@ namespace UnionTests
         [Test]
         public void BenchmarkMatchResult()
         {
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                var u = UnionIntDouble.Create(i);
+                var s = u.Match(
+                    Int: x => x,
+                    Else: () => i);
+            }
+        }
+
+        [Test]
+        public void BenchmarkMatchResultCached()
+        {
             var u = UnionIntDouble.Create(1);
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.Match(
                     Int: x => x,
                     Else: () => i);
+            }
+        }
+
+        [Test]
+        public void BenchmarkMatchResultNoLambda()
+        {
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                var u = UnionIntDouble.Create(1);
+                var s = u.Match();
+            }
+        }
+
+        [Test]
+        public void BenchmarkMatchResultNoLambdaCached()
+        {
+            var u = UnionIntDouble.Create(1);
+
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                var s = u.Match();
             }
         }
     }

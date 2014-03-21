@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Union", "Union.csproj", "{E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Union.Tests", "..\Union.Tests\Union.Tests.csproj", "{64FAD22C-0114-4C9B-A5AD-AFAC9327B8FD}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpUnionExamples", "..\FSharpUnionExamples\FSharpUnionExamples.fsproj", "{F27FB0A3-1FED-47BD-9C04-FDE738A406D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{64FAD22C-0114-4C9B-A5AD-AFAC9327B8FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64FAD22C-0114-4C9B-A5AD-AFAC9327B8FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64FAD22C-0114-4C9B-A5AD-AFAC9327B8FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F27FB0A3-1FED-47BD-9C04-FDE738A406D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F27FB0A3-1FED-47BD-9C04-FDE738A406D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F27FB0A3-1FED-47BD-9C04-FDE738A406D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F27FB0A3-1FED-47BD-9C04-FDE738A406D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

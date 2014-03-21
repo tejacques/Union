@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Functional.Union
 {
+
     /// <summary>
     /// A self referential class union of three types
     /// </summary>
@@ -21,6 +22,17 @@ namespace Functional.Union
         /// The underlying union
         /// </summary>
         protected Union<T1, T2> union;
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the tag of the underlying union
+        /// </summary>
+        protected Union<T1, T2>.UnionTypes Tag
+        {
+            get { return union._tag; }
+        }
         #endregion
 
         #region Instantiators

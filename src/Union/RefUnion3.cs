@@ -24,6 +24,17 @@ namespace Functional.Union
         protected Union<T1, T2, T3> union;
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the tag of the underlying union
+        /// </summary>
+        protected Union<T1, T2, T3>.UnionTypes Tag
+        {
+            get { return union._tag; }
+        }
+        #endregion
+
         #region Instantiators
         /// <summary>
         /// Creates the implementing RefUnion type from the first type

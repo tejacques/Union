@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Union.Tests;
 
 namespace UnionTests
 {
@@ -12,36 +13,28 @@ namespace UnionTests
     public class BenchmarkUnion
     {
         Union<int, double> union;
-        int loops = 1000000;
 
         [Test]
         public void _Jit()
         {
-            int tmp = loops;
-            loops = 1;
+            int tmp = BenchmarkSettings.Loops;
+            BenchmarkSettings.Loops = 1;
             BenchmarkCreate();
             BenchmarkValeOr_Present();
             BenchmarkValeOr_NotPresent();
             BenchmarkValeOrFn_Present();
             BenchmarkValeOrFn_NotPresent();
             BenchmarkMatch();
+            BenchmarkMatchCached();
             BenchmarkMatchResult();
-            loops = tmp;
-        }
-
-        [Test]
-        public void BenchmarkLoop()
-        {
-            for(int i = 0; i < loops; i++)
-            {
-                int j = i;
-            }
+            BenchmarkMatchResultCached();
+            BenchmarkSettings.Loops = tmp;
         }
 
         [Test]
         public void BenchmarkCreate()
         {
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 union = i;
             }
@@ -52,7 +45,7 @@ namespace UnionTests
         {
             Union<int, double> u = 1;
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.ValueOr(2);
             }
@@ -63,7 +56,7 @@ namespace UnionTests
         {
             Union<int, double> u = 1;
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.ValueOr(2.0);
             }
@@ -74,7 +67,7 @@ namespace UnionTests
         {
             Union<int, double> u = 1;
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.ValueOr(() => 2);
             }
@@ -85,7 +78,7 @@ namespace UnionTests
         {
             Union<int, double> u = 1;
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.ValueOr(() => 2.0);
             }
@@ -94,9 +87,19 @@ namespace UnionTests
         [Test]
         public void BenchmarkMatch()
         {
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                Union<int, double> u = i;
+                u.Match(Else: () => { });
+            }
+        }
+
+        [Test]
+        public void BenchmarkMatchCached()
+        {
             Union<int, double> u = 1;
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 u.Match(Else: () => { });
             }
@@ -105,9 +108,21 @@ namespace UnionTests
         [Test]
         public void BenchmarkMatchResult()
         {
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                Union<int, double> u = i;
+                var s = u.Match(
+                    Match1: x => x,
+                    Else: () => 1);
+            }
+        }
+
+        [Test]
+        public void BenchmarkMatchResultCached()
+        {
             Union<int, double> u = 1;
 
-            for (int i = 0; i < loops; i++)
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.Match(
                     Match1: x => x,
