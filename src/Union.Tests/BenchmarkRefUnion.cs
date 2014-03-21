@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Union.Tests;
+using RefUnionTests;
 
 namespace RefUnionTests
 {
@@ -28,6 +29,8 @@ namespace RefUnionTests
             BenchmarkMatchResult();
             BenchmarkMatchResultNoLambda();
             BenchmarkMatchResultNoLambdaCached();
+            BenchmarkSumTree();
+            BenchmarkSumTreeCached();
             BenchmarkSettings.Loops = tmp;
         }
 
@@ -152,6 +155,78 @@ namespace RefUnionTests
             for (int i = 0; i < BenchmarkSettings.Loops; i++)
             {
                 var s = u.Match();
+            }
+        }
+
+        [Test]
+        public void BenchmarkSumTree()
+        {
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                Tree t = Tree.Create(new Tree.Node
+                (
+                    value: 0,
+                    left: Tree.Create(new Tree.Node
+                    (
+                        value: 1,
+                        left: Tree.Create(new Tree.Node
+                        (
+                            value: 2,
+                            left: Tree.Leaf.Tree,
+                            right: Tree.Leaf.Tree
+                        )),
+                        right: Tree.Create(new Tree.Node
+                        (
+                            value: 3,
+                            left: Tree.Leaf.Tree,
+                            right: Tree.Leaf.Tree
+                        ))
+                    )),
+                    right: Tree.Create(new Tree.Node
+                    (
+                        value: 4,
+                        left: Tree.Leaf.Tree,
+                        right: Tree.Leaf.Tree
+                    ))
+                ));
+
+                var resultSumTree = t.SumTree();
+            }
+        }
+
+        [Test]
+        public void BenchmarkSumTreeCached()
+        {
+            Tree t = Tree.Create(new Tree.Node
+            (
+                value: 0,
+                left: Tree.Create(new Tree.Node
+                (
+                    value: 1,
+                    left: Tree.Create(new Tree.Node
+                    (
+                        value: 2,
+                        left: Tree.Leaf.Tree,
+                        right: Tree.Leaf.Tree
+                    )),
+                    right: Tree.Create(new Tree.Node
+                    (
+                        value: 3,
+                        left: Tree.Leaf.Tree,
+                        right: Tree.Leaf.Tree
+                    ))
+                )),
+                right: Tree.Create(new Tree.Node
+                (
+                    value: 4,
+                    left: Tree.Leaf.Tree,
+                    right: Tree.Leaf.Tree
+                ))
+            ));
+
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                var resultSumTree = t.SumTree();
             }
         }
     }

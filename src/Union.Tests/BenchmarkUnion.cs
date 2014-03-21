@@ -9,6 +9,7 @@ using Union.Tests;
 
 namespace UnionTests
 {
+    using Tree = Union<Leaf, Node>;
     [TestFixture]
     public class BenchmarkUnion
     {
@@ -28,6 +29,8 @@ namespace UnionTests
             BenchmarkMatchCached();
             BenchmarkMatchResult();
             BenchmarkMatchResultCached();
+            BenchmarkSumTree();
+            BenchmarkSumTreeCached();
             BenchmarkSettings.Loops = tmp;
         }
 
@@ -127,6 +130,78 @@ namespace UnionTests
                 var s = u.Match(
                     Match1: x => x,
                     Else: () => 1);
+            }
+        }
+
+        [Test]
+        public void BenchmarkSumTree()
+        {
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                Tree t = new Node
+                (
+                    value: 0,
+                    left: new Node
+                    (
+                        value: 1,
+                        left: new Node
+                        (
+                            value: 2,
+                            left: Node.Leaf,
+                            right: Node.Leaf
+                        ),
+                        right: new Node
+                        (
+                            value: 3,
+                            left: Node.Leaf,
+                            right: Node.Leaf
+                        )
+                    ),
+                    right: new Node
+                    (
+                        value: 4,
+                        left: Node.Leaf,
+                        right: Node.Leaf
+                    )
+                );
+
+                var resultSumTree = UnionTests.SumTree(t);
+            }
+        }
+
+        [Test]
+        public void BenchmarkSumTreeCached()
+        {
+            Tree t = new Node
+            (
+                value: 0,
+                left: new Node
+                (
+                    value: 1,
+                    left: new Node
+                    (
+                        value: 2,
+                        left: Node.Leaf,
+                        right: Node.Leaf
+                    ),
+                    right: new Node
+                    (
+                        value: 3,
+                        left: Node.Leaf,
+                        right: Node.Leaf
+                    )
+                ),
+                right: new Node
+                (
+                    value: 4,
+                    left: Node.Leaf,
+                    right: Node.Leaf
+                )
+            );
+
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                var resultSumTree = UnionTests.SumTree(t);
             }
         }
     }

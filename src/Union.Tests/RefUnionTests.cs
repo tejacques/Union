@@ -39,6 +39,55 @@ namespace RefUnionTests
         }
     }
 
+    public class Tree : RefUnion<Tree, Tree.Leaf, Tree.Node>
+    {
+        public class Leaf
+        {
+            public static readonly Tree Tree = Tree.Create((Leaf)null);
+        }
+        public class Node
+        {
+            public int Value;
+            public Tree Left;
+            public Tree Right;
+
+            public Node(int value, Tree left, Tree right)
+            {
+                Value = 0;
+                Left = left;
+                Right = right;
+            }
+        }
+
+        public static int Sum(Tree tree)
+        {
+            return tree.Match(
+                (Leaf l) => 0,
+                (Node n) => n.Value + Sum(n.Left) + Sum(n.Right));
+        }
+
+        public int SumTree()
+        {
+            return this.Match(
+                (Leaf l) => 0,
+                (Node n) => n.Value + Sum(n.Left) + Sum(n.Right));
+        }
+
+        public int SumTreeDirect()
+        {
+            switch (this.Tag)
+            {
+                case Union<Leaf, Node>.UnionTypes.Type1:
+                    return 0;
+                case Union<Leaf, Node>.UnionTypes.Type2:
+                    var n = this.ValueOr((Node)null);
+                    return n.Value + n.Left.SumTreeDirect() + n.Right.SumTreeDirect();
+            }
+
+            return 0;
+        }
+    }
+
     [TestFixture]
     public class RefUnionTests
     {
@@ -123,54 +172,35 @@ namespace RefUnionTests
             });
         }
 
-        public class Tree : RefUnion<Tree, Tree.Leaf, Tree.Node>
-        {
-            public struct Leaf { }
-            public class Node
-            {
-                public int Value;
-                public Tree Left;
-                public Tree Right;
-
-                public Node()
-                {
-                    Value = 0;
-                    Left = Tree.Create(new Leaf());
-                    Right = Tree.Create(new Leaf());
-                }
-            }
-
-            public static int Sum(Tree tree)
-            {
-                return tree.Match(
-                    (Leaf l) => 0,
-                    (Node n) => n.Value + Sum(n.Left) + Sum(n.Right));
-            }
-        }
-
         [Test]
         public void TestTree()
         {
             Tree t = Tree.Create(new Tree.Node
-            {
-                Value = 0,
-                Left = Tree.Create(new Tree.Node
-                {
-                    Value = 1,
-                    Left = Tree.Create(new Tree.Node
-                    {
-                        Value = 2
-                    }),
-                    Right = Tree.Create(new Tree.Node
-                    {
-                        Value = 3
-                    })
-                }),
-                Right = Tree.Create(new Tree.Node
-                {
-                    Value = 4
-                })
-            });
+            (
+                value: 0,
+                left: Tree.Create(new Tree.Node
+                (
+                    value: 1,
+                    left: Tree.Create(new Tree.Node
+                    (
+                        value: 2,
+                        left: Tree.Leaf.Tree,
+                        right: Tree.Leaf.Tree
+                    )),
+                    right: Tree.Create(new Tree.Node
+                    (
+                        value: 3,
+                        left: Tree.Leaf.Tree,
+                        right: Tree.Leaf.Tree
+                    ))
+                )),
+                right: Tree.Create(new Tree.Node
+                (
+                    value: 4,
+                    left: Tree.Leaf.Tree,
+                    right: Tree.Leaf.Tree
+                ))
+            ));
 
             var resultSumTree = Tree.Sum(t);
             Assert.AreEqual(10, resultSumTree);

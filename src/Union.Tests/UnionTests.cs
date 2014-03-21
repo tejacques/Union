@@ -9,17 +9,22 @@ using Functional.Union;
 namespace UnionTests
 {
     using Tree = Union<Leaf, Node>;
-    public struct Leaf { }
+    public struct Leaf
+    {
+        
+    }
     public class Node
     {
+        public static readonly Tree Leaf = default(Leaf);
         public int Value;
         public Tree Left;
         public Tree Right;
 
-        public Node()
+        public Node(int value, Tree left, Tree right)
         {
-            Left = new Leaf();
-            Right = new Leaf();
+            this.Value = value;
+            this.Left = left;
+            this.Right = right;
         }
     }
 
@@ -118,25 +123,31 @@ namespace UnionTests
         public void TestTree()
         {
             Tree t = new Node
-            {
-                Value = 0,
-                Left = new Node
-                {
-                    Value = 1,
-                    Left = new Node
-                    {
-                        Value = 2
-                    },
-                    Right = new Node
-                    {
-                        Value = 3
-                    }
-                },
-                Right = new Node
-                {
-                    Value = 4
-                }
-            };
+            (
+                value: 0,
+                left: new Node
+                (
+                    value: 1,
+                    left: new Node
+                    (
+                        value: 2,
+                        left: Node.Leaf,
+                        right: Node.Leaf
+                    ),
+                    right: new Node
+                    (
+                        value: 3,
+                        left: Node.Leaf,
+                        right: Node.Leaf
+                    )
+                ),
+                right: new Node
+                (
+                    value: 4,
+                    left: Node.Leaf,
+                    right: Node.Leaf
+                )
+            );
 
             var resultSumTree = SumTree(t);
             Assert.AreEqual(10, resultSumTree);

@@ -23,6 +23,8 @@ namespace Union.Tests
             BenchmarkUnionFSharpCached();
             BenchmarkUnionFSharpWithLambda();
             BenchmarkUnionFSharpWithLambdaCached();
+            BenchmarkSumTree();
+            BenchmarkSumTreeCached();
             BenchmarkSettings.Loops = tmp;
         }
 
@@ -86,6 +88,24 @@ namespace Union.Tests
                 var res = u.Match(
                     I: I,
                     D: D);
+            }
+        }
+
+        [Test]
+        public void BenchmarkSumTree()
+        {
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                TreeUnion.sumTree(TreeUnion.makeTree());
+            }
+        }
+
+        [Test]
+        public void BenchmarkSumTreeCached()
+        {
+            for (int i = 0; i < BenchmarkSettings.Loops; i++)
+            {
+                TreeUnion.resultSumTree();
             }
         }
     }

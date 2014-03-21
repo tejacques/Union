@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BenchmarkFSharpUnion.cs" />
+    <Compile Include="BenchmarkNonUnion.cs" />
     <Compile Include="BenchmarkRefUnion.cs" />
     <Compile Include="BenchmarkSettings.cs" />
     <Compile Include="BenchmarkUnion.cs" />
