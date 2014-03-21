@@ -28,4 +28,4 @@ type UnionMatch() =
         | Int(i) -> i
         | Double(d) -> int(d)
 
-    new(i: int) as this = UnionMatch() then this.Value = Int(i)
+    new(i: int) as this = UnionMatch() then this.Value = Int(i) |> ignore
