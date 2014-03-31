@@ -37,8 +37,8 @@ namespace UnionTests
             Union<int, double> u = 1;
 
             var s = u.Match(
-                Match1: i => i,
-                Match2: d => d,
+                (int i) => i,
+                (double d) => d,
                 Else: () => 0);
 
             Assert.AreEqual(1, s);

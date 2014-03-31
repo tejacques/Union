@@ -53,7 +53,7 @@ namespace RefUnionTests
 
             public Node(int value, Tree left, Tree right)
             {
-                Value = 0;
+                Value = value;
                 Left = left;
                 Right = right;
             }
@@ -70,7 +70,7 @@ namespace RefUnionTests
         {
             return this.Match(
                 (Leaf l) => 0,
-                (Node n) => n.Value + Sum(n.Left) + Sum(n.Right));
+                (Node n) => n.Value + n.Left.SumTree() + n.Right.SumTree());
         }
 
         public int SumTreeDirect()
